@@ -22,6 +22,8 @@ app.post('/users', (request, response) => {
     username,
     todos:[]
   })
+
+  return response.status(201).send()
 });
 
 app.get('/todos', checksExistsUserAccount, (request, response) => {
