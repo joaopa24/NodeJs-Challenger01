@@ -31,7 +31,7 @@ app.post('/users', (request, response) => {
   if(userAlreadyExists){
     return response.status(400).json({ error: "User already exists!"})
   }
-  
+
   const user = {
     id: uuidv4(),
     name,
@@ -64,43 +64,55 @@ app.post('/todos', checksExistsUserAccount, (request, response) => {
 
     user.todos.push(todoCreate)
 
-    return response.status(201).send();
+    return response.status(201).json(todoCreate);
 });
 
 app.put('/todos/:id', checksExistsUserAccount, (request, response) => {
-    const { id } = request.query;
+    const { id } = request.params;
     const { user } = request;
     
-    const { title, dealine } = request.body;
+    const { title, deadline } = request.body;
 
     const findTodo = user.todos.find(todo => todo.id === id)
+
+    if(!findTodo){
+      return response.status(404).json({ error:"Todo not found!"})
+    }
     
     findTodo.title = title
-    findTodo.deadline = dealine
+    findTodo.deadline = deadline
     
-    return response.status(201).send()
+    return response.json(findTodo)
 });
 
 app.patch('/todos/:id/done', checksExistsUserAccount, (request, response) => {
-  const { id } = request.query;
+  const { id } = request.params;
   const { user } = request;
 
   const findTodo = user.todos.find(todo => todo.id === id)
+
+  if(!findTodo){
+    return response.status(404).json({ error:"Todo not found!"})
+  }
   
   findTodo.done = true
   
-  return response.status(201).send()
+  return response.json(findTodo)
 });
 
 app.delete('/todos/:id', checksExistsUserAccount, (request, response) => {
-  const { id } = request.query;
+  const { id } = request.params;
   const { user } = request;
   
-  const findTodo = user.todos.find(todo => todo.id === id)
+  const findTodo = user.todos.findIndex(todo => todo.id === id)
+
+  if(findTodo === -1){
+    return response.status(404).json({ error:"Todo not found!"})
+  }
 
   user.todos.splice(findTodo, 1)
 
-  return response.status(200).json(users)
+  return response.status(204).json()
 });
 
 module.exports = app;
