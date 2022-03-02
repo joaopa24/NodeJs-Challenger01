@@ -15,7 +15,7 @@ function checksExistsUserAccount(request, response, next) {
    const user = users.find(user => user.username === username)
 
    if (!user){
-     return response.status(400).json({ error:"User not found!"})
+     return response.status(404).json({ error:"User not found!"})
    }
 
    request.user = user
@@ -26,14 +26,15 @@ function checksExistsUserAccount(request, response, next) {
 app.post('/users', (request, response) => {
   const { name, username } = request.body;
 
-  users.push({
+  const user = {
     id: uuidv4(),
     name,
     username,
     todos:[]
-  })
-
-  return response.status(201).send()
+  }
+  
+  users.push(user)
+  return response.status(201).send(user)
 });
 
 app.get('/todos', checksExistsUserAccount, (request, response) => {
