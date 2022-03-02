@@ -51,8 +51,8 @@ app.post('/todos', checksExistsUserAccount, (request, response) => {
         id: uuidv4(),
         title,
         done: false,
-        deadline: new.Date(deadline),
-        created_at: new.Date()
+        deadline: new Date(deadline),
+        created_at: new Date()
     }
 
     user.todos.push(todoCreate)
@@ -61,8 +61,8 @@ app.post('/todos', checksExistsUserAccount, (request, response) => {
 });
 
 app.put('/todos/:id', checksExistsUserAccount, (request, response) => {
-    const { id } = request.query;
-    const { username } = request;
+    //const { id } = request.query;
+    //const { username } = request;
 
 });
 
